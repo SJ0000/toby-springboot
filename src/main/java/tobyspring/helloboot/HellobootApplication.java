@@ -2,14 +2,21 @@ package tobyspring.helloboot;
 
 
 import org.apache.catalina.startup.Tomcat;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServer;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
@@ -20,20 +27,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+@Configuration
+@ComponentScan
 public class HellobootApplication {
 
-    public static void main(String[] args) {
-        GenericWebApplicationContext applicationContext = new GenericWebApplicationContext();
-        applicationContext.registerBean(HelloController.class);
-        applicationContext.registerBean(SimpleHelloService.class);
-        applicationContext.refresh();
+    @Bean
+    public ServletWebServerFactory servletWebServerFactory() {
+        return new TomcatServletWebServerFactory();
+    }
 
-        ServletWebServerFactory factory = new TomcatServletWebServerFactory();
-        WebServer webServer = factory.getWebServer(servletContext -> {
-            servletContext.addServlet("dispatcherServlet",
-                    new DispatcherServlet(applicationContext)
-            ).addMapping("/*");
-        });
-        webServer.start();
+    @Bean
+    public DispatcherServlet dispatcherServlet() {
+        return new DispatcherServlet();
+    }
+
+    public static void main(String[] args) {
+        // MySpringApplication.run(HellobootApplication.class, args);
+        SpringApplication.run(HellobootApplication.class, args);
     }
 }
