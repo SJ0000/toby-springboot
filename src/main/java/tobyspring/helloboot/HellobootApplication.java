@@ -27,19 +27,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@Configuration
-@ComponentScan
+@MySpringBootAnnotation
 public class HellobootApplication {
-
-    @Bean
-    public ServletWebServerFactory servletWebServerFactory() {
-        return new TomcatServletWebServerFactory();
-    }
-
-    @Bean
-    public DispatcherServlet dispatcherServlet() {
-        return new DispatcherServlet();
-    }
 
     public static void main(String[] args) {
         // MySpringApplication.run(HellobootApplication.class, args);
